@@ -32,6 +32,29 @@ module.exports = function (app) {
     .get(function (req, res){
       //response will be array of book objects
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
+      // create arra
+      let arrayOfBooks = [];
+      Book.find(
+
+        {},
+        (err, res) => {
+          if (!err && results) {
+            results.forEach((result) => {
+              let book = result.toJSON()
+              book['commentcount'] = book.comments.length;
+              arrayOfBooks.push(book)
+
+            })
+            return res.json(arrayOfBooks)
+          }
+        }
+      )
+
+
+
+
+
+      
     })
     
     .post(function (req, res){
@@ -43,15 +66,12 @@ module.exports = function (app) {
       let newBook = new Book ({
         title: title,
         comments: []
-
       })
       newBook.save((err, createdBook) =>{
         if (!err && createdBook) {
           return res.json(createdBook)
         }
       })
-
-
     })
     
     .delete(function(req, res){

@@ -13,6 +13,8 @@ const server = require('../server');
 
 chai.use(chaiHttp);
 
+let id = "";
+
 suite('Functional Tests', function() {
 
   /*
@@ -45,14 +47,21 @@ suite('Functional Tests', function() {
       test('Test POST /api/books with title', function(done) {
         chai
         .request(server)
-        .post()
-        .send()
-        .end()
-        
-
-        done();
+        .post('/api/books')
+        .send({
+          title: "Hidden in Plain Sight"
+        })
+        .end((err, res) => {
+          assert.equal(res.status, 200);
+          assert.equal(res.body.title, "Hidden in Plain Sight");
+          assert.isNotNull(res.body._id)
+          id = res.body._id;
+          console.log("id has been set as" + id);
+          console.log(`id has been set as ${id}`);
+          done()
+        })
       });
-      
+
   // TEST #2 -    
       test('Test POST /api/books with no title given', function(done) {
         //done();
@@ -71,7 +80,18 @@ suite('Functional Tests', function() {
     suite('GET /api/books => array of books', function(){
   // TEST #3 -    
       test('Test GET /api/books',  function(done){
-        //done();
+        chai
+        .get('/api/books')
+        .request(server)
+        .send()
+        .end((err, res) => {
+          assert.equal(res.status, 200);
+          assert.isArray(res.body, 'response should be an array');
+          assert.property(res.body[0], 'commentcount', 'Books in array should contain comments' );
+          assert.property(res.body[0], 'title', 'Books in array should contain title' );
+          assert.property(res.body[0], '_id', 'Books in array should contain _id' );
+          done();
+        })        
       });      
       
     });
