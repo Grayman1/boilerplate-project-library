@@ -36,11 +36,20 @@ module.exports = function (app) {
     
     .post(function (req, res){
       let title = req.body.title;
-      //response will contain new book object including atleast _id and title
       if (!title) {
         return res.json('missing title')
       }
+      //response will contain new book object including atleast _id and title
+      let newBook = new Book ({
+        title: title,
+        comments: []
 
+      })
+      newBook.save((err, createdBook) =>{
+        if (!err && createdBook) {
+          return res.json(createdBook)
+        }
+      })
 
 
     })
