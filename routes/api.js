@@ -35,9 +35,8 @@ module.exports = function (app) {
       // create arra
       let arrayOfBooks = [];
       Book.find(
-
         {},
-        (err, res) => {
+        (err, results) => {
           if (!err && results) {
             results.forEach((result) => {
               let book = result.toJSON()
@@ -48,13 +47,7 @@ module.exports = function (app) {
             return res.json(arrayOfBooks)
           }
         }
-      )
-
-
-
-
-
-      
+      )      
     })
     
     .post(function (req, res){
@@ -62,6 +55,7 @@ module.exports = function (app) {
       if (!title) {
         return res.json('missing title')
       }
+      
       //response will contain new book object including atleast _id and title
       let newBook = new Book ({
         title: title,
@@ -76,25 +70,69 @@ module.exports = function (app) {
     
     .delete(function(req, res){
       //if successful response will be 'complete delete successful'
+      Book.remove(
+      {}, 
+      (err, jsonStatus)=> {
+        if(err){
+          console.log(err)
+        }else if (!err && jsonStatus){
+          return res.json('complete delete successful')
+        }
+      })
     });
 
 
 
+
   app.route('/api/books/:id')
-    .get(function (req, res){
+    .get((req, res) => {
       let bookid = req.params.id;
       //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+      Book.findById(
+        bookid,
+        (err, result) => {
+        if (!err && result) {
+          return res.json(result)
+        } else if (!result) {
+          return res.json('no book exists')
+        }
+        }
+      )
     })
     
     .post(function(req, res){
       let bookid = req.params.id;
       let comment = req.body.comment;
       //json res format same as .get
+
+      Book.findByIdAndUpdate(
+        bookid,
+        {$push: {comments: comment}},
+        {new: true},
+        (err, updatedBook) => {
+          if (!err && updatedBook) {
+            return res.json(updatedBook) 
+          } else if (!updatedBook) {
+            return res.json('no book exists')
+          }
+        }
+      )
     })
     
     .delete(function(req, res){
       let bookid = req.params.id;
       //if successful response will be 'delete successful'
+      Book.findByIdAndRemove(
+        bookid,
+        (err, deletedBook) => {
+          if (!err && deletedBook) {
+            return res.json('delete successful')
+          } else if (!deletedBook) {
+            return res.json('no book exists')
+          }
+        }
+      )
     });
+      
   
 };
