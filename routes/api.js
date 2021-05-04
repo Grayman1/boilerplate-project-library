@@ -40,6 +40,8 @@ module.exports = function (app) {
           if (!err && results) {
             results.forEach((result) => {
               let book = result.toJSON()
+              book['id'] = book._id;
+              book['title'] = book.title;
               book['commentcount'] = book.comments.length;
               arrayOfBooks.push(book)
 
@@ -53,7 +55,7 @@ module.exports = function (app) {
     .post(function (req, res){
       let title = req.body.title;
       if (!title) {
-        return res.json('missing title')
+        return res.json('missing required field title')
       }
       
       //response will contain new book object including atleast _id and title
@@ -104,6 +106,9 @@ module.exports = function (app) {
       let bookid = req.params.id;
       let comment = req.body.comment;
       //json res format same as .get
+      if (!comment) {
+        return res.json('missing required field comment')
+      }
 
       Book.findByIdAndUpdate(
         bookid,

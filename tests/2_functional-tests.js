@@ -21,7 +21,7 @@ suite('Functional Tests', function() {
   * ----[EXAMPLE TEST]----
   * Each test should completely test the response of the API end-point including response status code!
   */
-
+/*
   // TEST #1 -
   test('#example Test GET /api/books', function(done){
      chai
@@ -36,6 +36,8 @@ suite('Functional Tests', function() {
         done();
       });
   });
+*/
+
   /*
   * ----[END of EXAMPLE TEST]----
   */
@@ -70,7 +72,7 @@ suite('Functional Tests', function() {
         .post('/api/books')
         .send({})
         .end(function(err, res){
-          assert.equal(res.body, 'missing title')
+          assert.equal(res.body, 'missing required field title')
         done();
         });
       });
@@ -156,7 +158,8 @@ suite('Functional Tests', function() {
           })
           .end(function(err, res){
             assert.equal(res.status, 200)
-            assert.isFalse(res.body.comments.includes(res.body.comment))
+            assert.equal(res.body, 'missing required field comment')
+         //   assert.isFalse(res.body.comments.includes(res.body.comment))
             done()
 
         })
