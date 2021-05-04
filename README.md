@@ -18,3 +18,27 @@ User Story #6. You can send a DELETE request to /api/books/{_id} to delete a boo
 User Story #7. You can send a DELETE request to /api/books to delete all books in the database. The returned response will be the string 'complete delete successful if successful.
 
 User Story #8. All 10 functional tests required are complete and passing
+
+**Functional Tests**
+
+Test Example
+
+Test #1. Test POST /api/books with title
+
+Test #2. Test POST /api/books with no title given
+
+Test #3. Test GET /api/books
+
+Test #4. Test GET /api/books/[id] with id not in db
+
+Test #5. Test GET /api/books/[id] with valid id in db
+
+Test #6. Test POST /api/books/[id] with comment
+
+Test #7. Test POST /api/books/[id] without comment field
+
+Test #8. Test POST /api/books/[id] with comment, id not in db
+
+Test #9. Test DELETE /api/books/[id] with valid id in db
+
+Test #10. Test DELETE /api/books/[id] with id not in db

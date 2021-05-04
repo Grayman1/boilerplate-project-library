@@ -21,8 +21,8 @@ suite('Functional Tests', function() {
   * ----[EXAMPLE TEST]----
   * Each test should completely test the response of the API end-point including response status code!
   */
-
-  // TEST #1 -
+/*
+  // TEST #0 -
   test('#example Test GET /api/books', function(done){
      chai
       .request(server)
@@ -36,7 +36,7 @@ suite('Functional Tests', function() {
         done();
       });
   });
-
+*/
 
   /*
   * ----[END of EXAMPLE TEST]----
@@ -59,7 +59,7 @@ suite('Functional Tests', function() {
           assert.equal(res.body.title, "Hidden in Plain Sight");
           assert.isNotNull(res.body._id)
           id = res.body._id;
-          console.log("id has been set as" + id);
+    //      console.log("id has been set as" + id);
           console.log(`id has been set as ${id}`);
           done()
         })
@@ -72,8 +72,9 @@ suite('Functional Tests', function() {
         .post('/api/books')
         .send({})
         .end(function(err, res){
+          assert.equal(res.status, 200)
           assert.equal(res.body, 'missing required field title')
-        done();
+          done();
         });
       });
       
@@ -86,7 +87,6 @@ suite('Functional Tests', function() {
         chai        
         .request(server)
         .get('/api/books')
-        .send()
         .end((err, res) => {
           assert.equal(res.status, 200);
           assert.isArray(res.body, 'response should be an array');
@@ -120,10 +120,9 @@ suite('Functional Tests', function() {
             assert.equal(res.status, 200);
             assert.equal(res.body._id, id);
             assert.equal(res.body.title, "Hidden in Plain Sight")
-       //     assert.isArray(res.body, 'response should be an array');
-       //     assert.property(res.body[0], 'commentcount', 'Books in array should contain comments');
-      //      assert.property(res.body[0], 'title', 'Books in array should contain title');
-       //     assert.property(res.body[0], '_id', 'Books in array should contain _id' );
+            assert.propertyVal(res.body, '_id', id)
+            assert.property(res.body, 'comments')
+            assert.isArray(res.body.comments)
             done();
           })       
       });     

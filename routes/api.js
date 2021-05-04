@@ -13,27 +13,26 @@ let mongodb = require("mongodb");
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
-// SET-UP MONGOOSE DB CONNECTIONS
-
 
 module.exports = function (app) {
-
+// SET-UP MONGOOSE DB CONNECTIONS
   mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
-
+// CREATE NEW SCHEMA
   let bookSchema = new Schema({
     title: {type: String, required: true},
-    comments: [String]
-    
+    comments: [String],
+    commentcount: {type:Number}    
   });
+  // CREATE NEW INSTANCE
   let Book = mongoose.model("Book", bookSchema)
 
 
   app.route('/api/books')
     .get(function (req, res){
+      // create array
+      let arrayOfBooks = [];
       //response will be array of book objects
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
-      // create arra
-      let arrayOfBooks = [];
       Book.find(
         {},
         (err, results) => {
@@ -42,7 +41,6 @@ module.exports = function (app) {
               let book = result.toJSON()
               book['commentcount'] = book.comments.length
               arrayOfBooks.push(book)
-
             })
             return res.json(arrayOfBooks)
           }
@@ -73,15 +71,13 @@ module.exports = function (app) {
       Book.remove(
       {}, 
       (err, jsonStatus)=> {
-        if(err){
+        if(err || !jsonStatus) {
           console.log(err)
         }else if (!err && jsonStatus){
           return res.json('complete delete successful')
         }
       })
     });
-
-
 
 
   app.route('/api/books/:id')
