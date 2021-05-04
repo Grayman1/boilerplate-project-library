@@ -40,9 +40,7 @@ module.exports = function (app) {
           if (!err && results) {
             results.forEach((result) => {
               let book = result.toJSON()
-              book['id'] = book._id;
-              book['title'] = book.title;
-              book['commentcount'] = book.comments.length;
+              book['commentcount'] = book.comments.length
               arrayOfBooks.push(book)
 
             })
